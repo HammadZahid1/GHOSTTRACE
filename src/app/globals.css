@@ -57,6 +57,78 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+::selection {
+  background: rgba(0, 213, 255, 0.25);
+  color: var(--text-primary);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 8px;
+  border: 2px solid var(--bg-primary);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3f54;
+}
+
+/* --- Design-system surface classes --- */
+
+/* Fine technical grid backdrop */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(28, 43, 58, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 43, 58, 0.4) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.bg-grid-fade {
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 35%, black 30%, transparent 75%);
+}
+
+/* Glass intelligence panel */
+.gt-panel {
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  backdrop-filter: blur(14px);
+}
+
+.gt-panel-elevated {
+  background: color-mix(in srgb, var(--panel-elevated) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--panel-border) 70%, var(--cyan) 12%);
+  border-radius: 12px;
+  backdrop-filter: blur(14px);
+}
+
+/* Monospaced technical label */
+.gt-label {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Subtle cyan glow for key visuals */
+.gt-glow {
+  box-shadow:
+    0 0 24px rgba(0, 213, 255, 0.08),
+    0 0 64px rgba(0, 213, 255, 0.05);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
