@@ -31,6 +31,8 @@ export default function AnalyzerPage() {
   const [result, setResult] = useState<Result | null>(null);
   const [highlight, setHighlight] = useState<string[]>([]);
   const [tab, setTab] = useState<"keywords" | "unigrams" | "bigrams" | "trigrams" | "patterns">("keywords");
+  const [keepStopWords, setKeepStopWords] = useState(false);
+  const [topN, setTopN] = useState(20);
   const addToHistory = useAnalysisStore((s) => s.add);
   const history = useAnalysisStore((s) => s.history);
 
@@ -45,8 +47,8 @@ export default function AnalyzerPage() {
     const r: Result = {
       text,
       stats: documentStats(text),
-      keywords: extractKeywords(text),
-      freq: wordFrequency(text),
+      keywords: extractKeywords(text, topN, !keepStopWords),
+      freq: wordFrequency(text, !keepStopWords),
       uni: ngrams(text, 1), bi: ngrams(text, 2), tri: ngrams(text, 3),
       candidates: extractCandidates(text),
       steps,
@@ -105,6 +107,14 @@ export default function AnalyzerPage() {
                 const f = e.target.files?.[0]; if (f) setText(await f.text());
               }} />
             </label>
+            <label className="flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-panel-border px-2 text-xs text-text-secondary">
+              <input type="checkbox" checked={keepStopWords} onChange={(e) => setKeepStopWords(e.target.checked)} />
+              Keep stop words
+            </label>
+            <select value={topN} onChange={(e) => setTopN(Number(e.target.value))}
+              className="h-8 rounded-lg border border-panel-border bg-panel px-2 text-xs text-text-secondary">
+              {[10, 20, 40, 80].map((n) => <option key={n} value={n}>Top {n}</option>)}
+            </select>
             <Button size="sm" variant="primary" icon={<Play className="h-3.5 w-3.5" />} onClick={run}>Run analysis</Button>
           </div>
         }>

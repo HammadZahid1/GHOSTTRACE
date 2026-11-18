@@ -11,6 +11,6 @@ export function wordFrequency(text: string, ignoreStopWords = true): TermFrequen
 }
 
 /** Keyword extraction: frequency ranking with stop-word filtering. */
-export function extractKeywords(text: string, limit = 20): TermFrequency[] {
-  return wordFrequency(text, true).slice(0, limit);
+export function extractKeywords(text: string, limit = 20, ignoreStopWords = true): TermFrequency[] {
+  return wordFrequency(text, ignoreStopWords).slice(0, limit);
 }
