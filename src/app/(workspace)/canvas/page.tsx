@@ -16,6 +16,9 @@ const KIND_ICON: Record<CanvasKind, typeof FileText> = {
   evidence: FileText, entity: Link2, event: RotateCcw, note: StickyNote, group: Group,
 };
 
+let nodeSeq = 0;
+const uid = (prefix: string) => `${prefix}-${Date.now().toString(36)}-${++nodeSeq}`;
+
 export default function CanvasPage() {
   const { nodes, edges, setNodes, addNode, removeNode, addEdge, reset } = useCanvasStore();
   const activeId = useInvestigationStore((s) => s.activeId);
@@ -60,14 +63,14 @@ export default function CanvasPage() {
       evidence: "New evidence card", entity: "New entity card", event: "New event card",
       note: "Analyst note", group: "New group",
     };
-    addNode({ id: `CAN-${Date.now()}`, kind, title: titles[kind], body: "", x: 80 + nodes.length * 25, y: 80 + nodes.length * 18 });
+    addNode({ id: uid("CAN"), kind, title: titles[kind], body: "", x: 80 + nodes.length * 25, y: 80 + nodes.length * 18 });
   };
 
   const populate = () => {
     const s = SCENARIOS.find((x) => x.investigation.id === activeId) ?? SCENARIOS[0];
-    s.evidence.slice(0, 3).forEach((e, i) => addNode({ id: `CAN-EV-${Date.now()}-${i}`, kind: "evidence", title: e.filename, body: e.content.slice(0, 140), x: 60 + i * 220, y: 80 }));
-    s.entities.slice(0, 3).forEach((e, i) => addNode({ id: `CAN-EN-${Date.now()}-${i}`, kind: "entity", title: e.name, body: e.category, x: 60 + i * 220, y: 300 }));
-    s.events.slice(0, 2).forEach((e, i) => addNode({ id: `CAN-TM-${Date.now()}-${i}`, kind: "event", title: e.title, body: e.date ?? "unverified time", x: 60 + i * 220, y: 520 }));
+    s.evidence.slice(0, 3).forEach((e, i) => addNode({ id: uid("CAN-EV"), kind: "evidence", title: e.filename, body: e.content.slice(0, 140), x: 60 + i * 220, y: 80 }));
+    s.entities.slice(0, 3).forEach((e, i) => addNode({ id: uid("CAN-EN"), kind: "entity", title: e.name, body: e.category, x: 60 + i * 220, y: 300 }));
+    s.events.slice(0, 2).forEach((e, i) => addNode({ id: uid("CAN-TM"), kind: "event", title: e.title, body: e.date ?? "unverified time", x: 60 + i * 220, y: 520 }));
   };
 
   const exportCanvas = () => {
@@ -81,7 +84,7 @@ export default function CanvasPage() {
     setSelected(id);
     if (connect.length === 0) setConnect([id]);
     else if (connect.length === 1 && connect[0] !== id) {
-      addEdge({ id: `EDGE-${Date.now()}`, from: connect[0], to: id, label: "linked" });
+      addEdge({ id: uid("EDGE"), from: connect[0], to: id, label: "linked" });
       setConnect([]);
     } else setConnect([]);
   };
@@ -178,3 +181,4 @@ export default function CanvasPage() {
     </>
   );
 }
+
