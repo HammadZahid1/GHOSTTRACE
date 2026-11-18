@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Cpu, Database, Eye, HardDrive, Timer } from "lucide-react";
+import { Activity, Database, Eye, HardDrive, Timer } from "lucide-react";
 import { Badge, Panel, StatCard } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { useAnalysisStore } from "@/stores/analysis-store";
@@ -108,3 +108,4 @@ export default function MonitorPage() {
     </>
   );
 }
+

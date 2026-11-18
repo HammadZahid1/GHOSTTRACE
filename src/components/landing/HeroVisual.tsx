@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+
 
 import { useSyncExternalStore } from "react";
 
@@ -29,7 +29,7 @@ function getWebglSnapshot(): boolean {
 function CoreFallback() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      <span className="gt-label animate-pulse">initializing intelligence core…</span>
+      <span className="gt-label animate-pulse">initializing intelligence coreâ€¦</span>
     </div>
   );
 }
@@ -43,7 +43,7 @@ function StaticFallback() {
 }
 
 /**
- * Hero visual centerpiece — procedural Three.js intelligence core
+ * Hero visual centerpiece â€” procedural Three.js intelligence core
  * with a graceful fallback when WebGL is unavailable.
  */
 export function HeroVisual() {
@@ -62,3 +62,5 @@ export function HeroVisual() {
     </div>
   );
 }
+
+

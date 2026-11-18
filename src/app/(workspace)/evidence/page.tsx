@@ -47,7 +47,7 @@ export default function EvidencePage() {
   };
 
   const exportMetadata = () => {
-    const blob = new Blob([JSON.stringify(items.map(({ content, ...m }) => m), null, 2)], {
+    const blob = new Blob([JSON.stringify(items.map((item) => { const { content: _content, ...rest } = item; return rest; }), null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
@@ -188,3 +188,4 @@ export default function EvidencePage() {
     </>
   );
 }
+

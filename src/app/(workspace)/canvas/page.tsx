@@ -7,7 +7,7 @@ import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { SCENARIOS } from "@/data/scenarios";
 import { useCanvasStore } from "@/stores/canvas-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
-import type { CanvasKind, CanvasNode } from "@/stores/canvas-store";
+import type { CanvasKind } from "@/stores/canvas-store";
 
 const KIND_COLOR: Record<CanvasKind, string> = {
   evidence: "#00D5FF", entity: "#3478FF", event: "#FFB547", note: "#8B78FF", group: "#42DDA0",
@@ -181,4 +181,5 @@ export default function CanvasPage() {
     </>
   );
 }
+
 

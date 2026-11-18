@@ -11,7 +11,7 @@ export default function WorkspaceLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex min-h-screen bg-bg-primary">
+    <div className="flex min-h-screen overflow-x-hidden bg-bg-primary">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />

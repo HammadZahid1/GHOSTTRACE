@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowUpRight, FileText, GitBranch, Users, Archive, Clock3, Eye } from "lucide-react";
 import { Badge, Panel, StatCard } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
@@ -7,8 +7,8 @@ import { EVIDENCE, EVENTS, INVESTIGATIONS, RELATIONSHIPS, ENTITIES } from "@/dat
 const activity = [
   { icon: FileText, text: "Evidence indexed", ref: "nightfall-d04.txt", tone: "cyan" as const, time: "2m" },
   { icon: Users, text: "New entity identified", ref: "Mira Solano", tone: "blue" as const, time: "18m" },
-  { icon: Clock3, text: "Timeline updated", ref: "ev13 · archive reconciliation", tone: "amber" as const, time: "1h" },
-  { icon: GitBranch, text: "Relationship discovered", ref: "r10 · funded", tone: "violet" as const, time: "3h" },
+  { icon: Clock3, text: "Timeline updated", ref: "ev13 Â· archive reconciliation", tone: "amber" as const, time: "1h" },
+  { icon: GitBranch, text: "Relationship discovered", ref: "r10 Â· funded", tone: "violet" as const, time: "3h" },
   { icon: Archive, text: "Report generated", ref: "INV-001 summary", tone: "success" as const, time: "5h" },
 ];
 
@@ -42,7 +42,7 @@ function NetworkPreview() {
             </g>
           ))}
         </svg>
-        <p className="gt-label absolute bottom-3 left-4">{ENTITIES.length} entities · {RELATIONSHIPS.length} relationships</p>
+        <p className="gt-label absolute bottom-3 left-4">{ENTITIES.length} entities Â· {RELATIONSHIPS.length} relationships</p>
       </div>
     </Panel>
   );
@@ -78,7 +78,7 @@ export default function OverviewPage() {
                     <Link href={`/entities?investigation=${i.id}`} className="truncate text-xs text-text-primary hover:text-cyan">
                       {i.title}
                     </Link>
-                    <p className="mt-0.5 font-mono text-[0.65rem] text-text-muted">{i.id} · {i.lastActivity}</p>
+                    <p className="mt-0.5 font-mono text-[0.65rem] text-text-muted">{i.id} Â· {i.lastActivity}</p>
                   </div>
                   <Badge tone={i.status === "active" ? "success" : "neutral"}>{i.status}</Badge>
                 </li>
@@ -122,7 +122,7 @@ export default function OverviewPage() {
             <div className="mt-4 grid grid-cols-3 border-t border-panel-border/70 pt-3 text-center">
               {[
                 [i.id, "evidence", 8], [i.id, "entities", 12], [i.id, "events", 16],
-              ].map(([a, label, value]) => (
+              ].map(([, label, value]) => (
                 <div key={label as string}>
                   <p className="font-mono text-sm text-text-primary">{value}</p>
                   <p className="gt-label">{label}</p>
@@ -135,3 +135,4 @@ export default function OverviewPage() {
     </>
   );
 }
+

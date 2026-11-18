@@ -1,18 +1,18 @@
 ﻿"use client";
 
 import { useMemo, useState } from "react";
-import { Download, FileText, Play, Sparkles } from "lucide-react";
+import { Play, Sparkles } from "lucide-react";
 import { Badge, Button, Panel, StatCard } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { EVIDENCE } from "@/data/scenarios";
-import { tokenize } from "@/engines/tokenizer";
+
 import { extractKeywords, wordFrequency } from "@/engines/frequency";
 import { ngrams } from "@/engines/ngrams";
 import { documentStats } from "@/engines/statistics";
 import { extractCandidates } from "@/engines/patterns";
 import { jaccard } from "@/engines/similarity";
 import { useAnalysisStore } from "@/stores/analysis-store";
-import type { AnalysisRecord } from "@/stores/analysis-store";
+
 
 type Result = {
   text: string;
@@ -72,7 +72,7 @@ export default function AnalyzerPage() {
   const highlighted = useMemo(() => {
     if (!highlight.length || !result) return result?.text ?? text;
     const parts = result.text.split(/(\s+)/);
-    return parts.map((p, i) =>
+    return parts.map((p) =>
       highlight.some((h) => p.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "") === h.toLowerCase())
         ? `\u001b${p}\u001c` : p,
     ).join("");
@@ -209,4 +209,8 @@ export default function AnalyzerPage() {
     </>
   );
 }
+
+
+
+
 

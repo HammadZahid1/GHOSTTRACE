@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,6 @@ import { cn } from "@/utils/cn";
 
 export function CommandPalette() {
   const router = useRouter();
-  const open = useUIStore((s) => s.paletteOpen);
   const setOpen = useUIStore((s) => s.setPaletteOpen);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -46,7 +45,7 @@ export function CommandPalette() {
               if (e.key === "ArrowUp") { e.preventDefault(); setSelected((s) => Math.max(s - 1, 0)); }
               if (e.key === "Enter" && results[selected]) go(results[selected].href);
             }}
-            placeholder="Search modules and commands…"
+            placeholder="Search modules and commandsâ€¦"
             className="h-12 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
           />
           <button onClick={() => setOpen(false)} aria-label="Close palette" className="text-text-muted hover:text-text-primary">
@@ -74,9 +73,10 @@ export function CommandPalette() {
           ))}
         </div>
         <div className="border-t border-panel-border px-4 py-2">
-          <p className="gt-label">↑↓ navigate · ↵ open · esc close · ctrl+f search</p>
+          <p className="gt-label">â†‘â†“ navigate Â· â†µ open Â· esc close Â· ctrl+f search</p>
         </div>
       </div>
     </div>
   );
 }
+

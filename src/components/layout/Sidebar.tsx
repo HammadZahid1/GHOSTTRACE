@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, Network } from "lucide-react";
+import { ChevronLeft, Network, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { NAV_GROUPS } from "@/config/navigation";
 import { useUIStore } from "@/stores/ui-store";
@@ -113,6 +113,13 @@ export function Sidebar() {
             className="absolute inset-0 bg-bg-primary/80 backdrop-blur-sm"
             onClick={() => setMobileNavOpen(false)}
           />
+          <button
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Close navigation"
+            className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg border border-panel-border text-text-secondary hover:text-cyan"
+          >
+            <X className="h-4 w-4" />
+          </button>
           <div className="absolute left-0 top-0 h-full border-r border-panel-border shadow-2xl">
             {content}
           </div>
