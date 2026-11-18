@@ -5,6 +5,7 @@ import {
   Archive, Download, FileText, Filter, Search, ShieldCheck, Trash2, Upload, X,
 } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
+import { useDebounced } from "@/hooks/useDebounced";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { useEvidenceStore } from "@/stores/evidence-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
@@ -24,9 +25,10 @@ export default function EvidencePage() {
   const [selected, setSelected] = useState<EvidenceDocument | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const debouncedSearch = useDebounced(search);
 
   const visible = useMemo(() => {
-    const q = search.toLowerCase();
+    const q = debouncedSearch.toLowerCase();
     const list = items.filter(
       (e) =>
         (category === "all" || e.category === category) &&
@@ -37,7 +39,7 @@ export default function EvidencePage() {
         : sort === "size" ? b.content.length - a.content.length
           : b.importedAt.localeCompare(a.importedAt),
     );
-  }, [items, search, category, sort]);
+  }, [items, debouncedSearch, category, sort]);
 
   const handleFiles = async (files: FileList | File[]) => {
     const r = await importFiles(files, activeId);

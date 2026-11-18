@@ -5,6 +5,7 @@ import { Download, Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
 import { EVENTS } from "@/data/scenarios";
+import { useDebounced } from "@/hooks/useDebounced";
 import { filterEvents, groupByMonth, sortEvents } from "@/engines/timeline";
 import { useTimelineStore } from "@/stores/timeline-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
@@ -30,8 +31,9 @@ export default function TimelinePage() {
   const [zoom, setZoom] = useState(100);
   const [selected, setSelected] = useState<TimelineEvent | null>(null);
   const [editing, setEditing] = useState<TimelineEvent | null>(null);
+  const debouncedQuery = useDebounced(query);
 
-  const filtered = filterEvents(scoped, { query, category, from, to });
+  const filtered = filterEvents(scoped, { query: debouncedQuery, category, from, to });
   const events = sortEvents(filtered, direction);
   const groups = groupByMonth(events);
 

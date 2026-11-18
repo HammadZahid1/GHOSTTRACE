@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plus, Search, Trash2, X } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
+import { useDebounced } from "@/hooks/useDebounced";
 import { EVENTS } from "@/data/scenarios";
 import { allEntities, useEntityStore } from "@/stores/entity-store";
 import { allRelationships, RELATIONSHIP_TYPES, useRelationshipStore } from "@/stores/relationship-store";
@@ -30,13 +31,14 @@ export default function EntitiesPage() {
   const [category, setCategory] = useState("all");
   const [selected, setSelected] = useState<Entity | null>(null);
   const [editing, setEditing] = useState<Entity | null>(null);
+  const debouncedSearch = useDebounced(search);
   const [linkTarget, setLinkTarget] = useState("");
   const [linkType, setLinkType] = useState<RelationshipType>("associated_with");
   const { local: localRels, deleted: deletedRels, add: addRel } = useRelationshipStore();
 
   const visible = entities.filter((e) =>
     (category === "all" || e.category === category) &&
-    (!search || e.name.toLowerCase().includes(search.toLowerCase())),
+    (!debouncedSearch || e.name.toLowerCase().includes(debouncedSearch.toLowerCase())),
   );
   const scoped = visible.filter((e) => e.investigationId === activeId);
   const relations = selected ? allRelationships(localRels, deletedRels).filter((r) => r.source === selected.id || r.target === selected.id) : [];
