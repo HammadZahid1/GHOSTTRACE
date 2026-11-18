@@ -23,33 +23,8 @@ export function CommandPalette() {
   }, [query]);
 
   useEffect(() => {
-    if (!open) return;
-    setQuery("");
-    setSelected(0);
     inputRef.current?.focus();
-  }, [open]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      const typing =
-        target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
-
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setOpen(!open);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f" && !typing) {
-        e.preventDefault();
-        setOpen(true);
-      } else if (e.key === "Escape") {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, setOpen]);
-
-  if (!open) return null;
+  }, []);
 
   const go = (href: string) => {
     router.push(href);
