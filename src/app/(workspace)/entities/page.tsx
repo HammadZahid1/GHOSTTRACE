@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plus, Search, Trash2, X } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
+import { EVENTS } from "@/data/scenarios";
 import { allEntities, useEntityStore } from "@/stores/entity-store";
 import { allRelationships, RELATIONSHIP_TYPES, useRelationshipStore } from "@/stores/relationship-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
