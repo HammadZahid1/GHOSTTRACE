@@ -1,5 +1,5 @@
 import {
-  Activity, Archive, Boxes, FileText, Frame, GitBranch, LayoutDashboard,
+  Activity, Archive, Boxes, FileText, FolderOpen, Frame, GitBranch, LayoutDashboard,
   ScanText, Settings, Users, Waypoints,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -20,6 +20,7 @@ export const NAV_GROUPS: NavGroup[] = [
     group: "Intelligence",
     items: [
       { label: "Overview", href: "/workspace", icon: LayoutDashboard },
+      { label: "Investigations", href: "/investigations", icon: FolderOpen },
       { label: "Evidence Vault", href: "/evidence", icon: Archive },
       { label: "Document Analyzer", href: "/analyzer", icon: ScanText },
     ],
