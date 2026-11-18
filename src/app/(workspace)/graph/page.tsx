@@ -47,7 +47,7 @@ export default function GraphPage() {
   const path = selected.length === 2 ? shortestPath(edges, selected[0], selected[1]) : null;
   const pathEdges = path?.edges.map((e) => e.id) ?? [];
   const pathNodes = path?.nodes ?? [];
-  const positions = useMemo(() => forceLayout(shown, edges), [shown, edges]);
+  const positions = forceLayout(shown, edges);
   const selectedEntities = selected.map((id) => entities.find((e) => e.id === id)).filter(Boolean);
 
   const select = (id: string) => setSelected((s) =>
