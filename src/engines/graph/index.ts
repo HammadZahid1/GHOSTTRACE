@@ -70,13 +70,50 @@ export function forceLayout(
   return pos;
 }
 
+/** Explore all nodes reachable within a hop limit (BFS traversal). */
+export function traverse(
+  relationships: Relationship[],
+  start: string,
+  maxDepth = 3,
+): Map<string, number> {
+  const adjacency = new Map<string, string[]>();
+  for (const r of relationships) {
+    for (const [a, b] of [[r.source, r.target], [r.target, r.source]] as const) {
+      if (!adjacency.has(a)) adjacency.set(a, []);
+      adjacency.get(a)!.push(b);
+    }
+  }
+  const depths = new Map<string, number>([[start, 0]]);
+  const queue = [start];
+  while (queue.length) {
+    const current = queue.shift()!;
+    const d = depths.get(current)!;
+    if (d >= maxDepth) continue;
+    for (const next of adjacency.get(current) ?? []) {
+      if (depths.has(next)) continue;
+      depths.set(next, d + 1);
+      queue.push(next);
+    }
+  }
+  return depths;
+}
+
+/** Degree centrality: number of direct relationships per entity. */
+export function degreeCentrality(relationships: Relationship[]): Map<string, number> {
+  const degree = new Map<string, number>();
+  for (const r of relationships) {
+    degree.set(r.source, (degree.get(r.source) ?? 0) + 1);
+    degree.set(r.target, (degree.get(r.target) ?? 0) + 1);
+  }
+  return degree;
+}
+
 export interface GraphPath {
   nodes: string[];
   edges: Relationship[];
 }
 
-/** Breadth-first search for the shortest relationship path. */
-export function shortestPath(
+/** Breadth-first search for the shortest relationship path. */export function shortestPath(
   relationships: Relationship[],
   start: string,
   end: string,

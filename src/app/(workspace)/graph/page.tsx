@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Eye, EyeOff, RotateCcw } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
-import { forceLayout, shortestPath } from "@/engines/graph";
+import { degreeCentrality, forceLayout, shortestPath, traverse } from "@/engines/graph";
 import { allEntities, useEntityStore } from "@/stores/entity-store";
 import { allRelationships, useRelationshipStore } from "@/stores/relationship-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
@@ -52,6 +52,10 @@ export default function GraphPage() {
 
   const select = (id: string) => setSelected((s) =>
     s.includes(id) ? s.filter((x) => x !== id) : s.length >= 2 ? [s[1], id] : [...s, id]);
+
+  const centrality = degreeCentrality(edges);
+  const reachable = selected[0] ? traverse(edges, selected[0], 2) : new Map<string, number>();
+  const topCentrality = [...centrality.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   return (
     <>
@@ -141,6 +145,20 @@ export default function GraphPage() {
               ))}
             </div>
             {view === "3d" && <p className="mt-4 text-[0.7rem] leading-relaxed text-text-muted">Drag to rotate · scroll to zoom · right-drag to pan.</p>}
+          </Panel>
+          <Panel title="Graph metrics" eyebrow="Local algorithms">
+            <p className="gt-label mb-2">Highest degree centrality</p>
+            <ul className="space-y-1.5">
+              {topCentrality.map(([id, degree]) => (
+                <li key={id} className="flex items-center justify-between text-[0.7rem]">
+                  <span className="truncate text-text-secondary">{entities.find((e) => e.id === id)?.name ?? id}</span>
+                  <span className="font-mono text-cyan">{degree}</span>
+                </li>
+              ))}
+            </ul>
+            {selected[0] && <p className="mt-3 text-[0.7rem] text-text-muted">
+              BFS reaches {reachable.size} nodes within 2 hops of the first selection.
+            </p>}
           </Panel>
           <Panel title="Legend" eyebrow="Node types">
             <div className="grid grid-cols-2 gap-2">
