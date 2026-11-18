@@ -10,7 +10,7 @@ import type {
 
 type EntityTuple = [string, EntityCategory, string];
 type RelTuple = [string, string, RelationshipType, string];
-type EventTuple = [string, string | null, string, string, TimelineEvent["status"]];
+type EventTuple = [string, string | null, string, string];
 
 const ENTITY_TUPLES: EntityTuple[] = [
   ["e01", "person", "Director Elara Vance"],
@@ -149,7 +149,7 @@ function buildScenario(seed: ScenarioSeed): Scenario {
     evidenceRefs: [`${seed.id}-d0${(i % 8) + 1}`],
   }));
 
-  const events: TimelineEvent[] = EVENT_TUPLES.map(([suffix, date, title, refs, status], i) => ({
+  const events: TimelineEvent[] = EVENT_TUPLES.map(([suffix, date, title, refs], i) => ({
     id: `${seed.id}-${suffix}`,
     investigationId: seed.id,
     title: custom(title),
@@ -159,7 +159,7 @@ function buildScenario(seed: ScenarioSeed): Scenario {
     evidenceRefs: [`${seed.id}-d0${(i % 8) + 1}`],
     entityRefs: [`${seed.id}-${refs}`],
     source: `${seed.id}-d0${(i % 8) + 1}`,
-    status,
+    status: date === null ? "unverified" : i % 5 === 2 ? "review" : "verified",
     ambiguousTime: date === null,
   }));
 
