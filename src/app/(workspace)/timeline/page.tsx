@@ -43,9 +43,23 @@ export default function TimelinePage() {
   };
 
   const review = (e: TimelineEvent) => {
-    const updated = { ...e, status: e.status === "verified" ? "review" : "verified" };
+    const updated: TimelineEvent = { ...e, status: e.status === "verified" ? "review" : "verified" };
     upsert(updated); setSelected(updated);
   };
+
+  /** Reorder by swapping assigned timestamps with the adjacent event. */
+  const reorder = (e: TimelineEvent, delta: number) => {
+    const i = events.findIndex((x) => x.id === e.id);
+    const other = events[i + delta];
+    if (!other || !e.date || !other.date) return;
+    const first: TimelineEvent = { ...e, date: other.date };
+    const second: TimelineEvent = { ...other, date: e.date };
+    upsert(first); upsert(second); setSelected(first);
+  };
+
+  const undated = scoped.filter((e) => !e.date).length;
+  const reviewed = scoped.filter((e) => e.status === "verified").length;
+  const coverage = scoped.length ? Math.round((reviewed / scoped.length) * 100) : 0;
 
   return (
     <>
@@ -117,6 +131,15 @@ export default function TimelinePage() {
           )}
         </Panel>
 
+        <Panel title="Chronology check" eyebrow="Analysis">
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between"><span className="text-text-secondary">Total events</span><span className="font-mono text-text-primary">{scoped.length}</span></div>
+            <div className="flex justify-between"><span className="text-text-secondary">Unverified time</span><span className="font-mono text-amber">{undated}</span></div>
+            <div className="flex justify-between"><span className="text-text-secondary">Review coverage</span><span className="font-mono text-success">{coverage}%</span></div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-panel-border"><div className="h-full bg-success" style={{ width: `${coverage}%` }} /></div>
+            <p className="pt-1 text-[0.7rem] leading-relaxed text-text-muted">Undated events are never assigned invented precision. Ambiguity remains visible in every view.</p>
+          </div>
+        </Panel>
         <Panel title="Event detail" eyebrow="Inspection" contentClassName="p-4">
           {!selected ? <EmptyState title="Select an event" description="Inspect sources, entities, and review state." /> : (
             <div className="space-y-3">
@@ -134,6 +157,14 @@ export default function TimelinePage() {
                 <Button size="sm" variant="secondary" onClick={() => review(selected)} icon={<RotateCcw className="h-3 w-3" />}>Toggle reviewed</Button>
                 <Button size="sm" variant="ghost" icon={<Pencil className="h-3 w-3" />} onClick={() => setEditing(selected)}>Edit</Button>
                 <Button size="sm" variant="danger" icon={<Trash2 className="h-3 w-3" />} onClick={() => { remove(selected.id); setSelected(null); }}>Delete</Button>
+              </div>
+              <div>
+                <p className="gt-label mb-1">Reorder assigned timestamps</p>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="ghost" onClick={() => reorder(selected, -1)}>↑ Earlier neighbor</Button>
+                  <Button size="sm" variant="ghost" onClick={() => reorder(selected, 1)}>↓ Later neighbor</Button>
+                </div>
+                <p className="mt-1 text-[0.65rem] leading-relaxed text-text-muted">Compares assigned timestamps and swaps them with the adjacent event. Unverified times are never altered.</p>
               </div>
             </div>
           )}
