@@ -134,3 +134,10 @@ body {
     scroll-behavior: auto;
   }
 }
+
+@media print {
+  header, nav, aside, button, input, select, textarea { display: none !important; }
+  body { background: white; color: #111; }
+  main, article, pre, p, h1, h2 { color: #111 !important; }
+  .gt-panel, .gt-panel-elevated { border: none; background: white; }
+}
