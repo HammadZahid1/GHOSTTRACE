@@ -5,10 +5,10 @@ import Link from "next/link";
 import { Plus, Search, Trash2, X } from "lucide-react";
 import { Badge, Button, EmptyState, Panel } from "@/components/common";
 import { ModuleHeader } from "@/components/layout/ModuleHeader";
-import { RELATIONSHIPS, EVENTS } from "@/data/scenarios";
 import { allEntities, useEntityStore } from "@/stores/entity-store";
+import { allRelationships, RELATIONSHIP_TYPES, useRelationshipStore } from "@/stores/relationship-store";
 import { useInvestigationStore } from "@/stores/investigation-store";
-import type { Entity, EntityCategory } from "@/types";
+import type { Entity, EntityCategory, RelationshipType } from "@/types";
 
 const tones: Record<EntityCategory, "cyan" | "blue" | "violet" | "amber" | "critical" | "success"> = {
   person: "cyan", organization: "blue", location: "violet",
@@ -29,13 +29,16 @@ export default function EntitiesPage() {
   const [category, setCategory] = useState("all");
   const [selected, setSelected] = useState<Entity | null>(null);
   const [editing, setEditing] = useState<Entity | null>(null);
+  const [linkTarget, setLinkTarget] = useState("");
+  const [linkType, setLinkType] = useState<RelationshipType>("associated_with");
+  const { local: localRels, deleted: deletedRels, add: addRel } = useRelationshipStore();
 
   const visible = entities.filter((e) =>
     (category === "all" || e.category === category) &&
     (!search || e.name.toLowerCase().includes(search.toLowerCase())),
   );
   const scoped = visible.filter((e) => e.investigationId === activeId);
-  const relations = selected ? RELATIONSHIPS.filter((r) => r.source === selected.id || r.target === selected.id) : [];
+  const relations = selected ? allRelationships(localRels, deletedRels).filter((r) => r.source === selected.id || r.target === selected.id) : [];
   const events = selected ? EVENTS.filter((ev) => ev.entityRefs.includes(selected.id)) : [];
 
   return (
@@ -104,6 +107,24 @@ export default function EntitiesPage() {
                     <span className="text-text-secondary">{r.label}</span><span className="font-mono text-text-muted">{r.type}</span>
                   </li>
                 ))}</ul>
+                <div className="mt-2 flex gap-2">
+                  <select value={linkTarget} onChange={(e) => setLinkTarget(e.target.value)}
+                    className="h-8 min-w-0 flex-1 rounded border border-panel-border bg-panel px-2 text-[0.7rem]">
+                    <option value="">Link to entity…</option>
+                    {entities.filter((e) => e.id !== selected.id).map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+                  </select>
+                  <select value={linkType} onChange={(e) => setLinkType(e.target.value as RelationshipType)}
+                    className="h-8 rounded border border-panel-border bg-panel px-2 text-[0.7rem]">
+                    {RELATIONSHIP_TYPES.map((t) => <option key={t}>{t}</option>)}
+                  </select>
+                  <Button size="sm" variant="primary" onClick={() => {
+                    if (!linkTarget) return;
+                    addRel({ id: `REL-LOCAL-${Date.now()}`, investigationId: activeId,
+                      source: selected.id, target: linkTarget, type: linkType,
+                      label: linkType.replaceAll("_", " "), evidenceRefs: [] });
+                    setLinkTarget("");
+                  }}>Link</Button>
+                </div>
               </div>
               <div>
                 <p className="gt-label mb-1">Event history ({events.length})</p>
